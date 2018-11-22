@@ -24,6 +24,12 @@ from ubireader.ubi.block import get_blocks_in_list
 
 class description(object):
     def __init__(self, blocks, layout_info):
+        log(description, 'layout_info= {}'.format(layout_info))
+        if len(layout_info) > 3:
+            to_delete = len(layout_info) - 3
+            log(description, 'layout_info size adjusting, likely {} extra blocks which we will now delete.'.format(to_delete))
+            del layout_info[2:2+to_delete]
+        log(description, 'layout_info after deletion= {}'.format(layout_info))
         self._image_seq = blocks[layout_info[0]].ec_hdr.image_seq
         self.vid_hdr_offset = blocks[layout_info[0]].ec_hdr.vid_hdr_offset
         self.version = blocks[layout_info[0]].ec_hdr.version

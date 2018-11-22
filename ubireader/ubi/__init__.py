@@ -158,6 +158,7 @@ class ubi(ubi_base):
         self._unknown_blocks_list = unknown_list
 
         layout_pairs = layout.group_pairs(self.blocks, self.layout_blocks_list)
+        # layout_pairs is a list of lists, with each item in the list being a list of block_ids for that image_seq.
 
         layout_infos = layout.associate_blocks(self.blocks, layout_pairs, self.first_peb_num)
 

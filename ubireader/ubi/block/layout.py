@@ -39,8 +39,10 @@ def group_pairs(blocks, layout_blocks_list):
         else:
             image_dict[image_seq].append(block_id)
 
+    log(group_pairs, 'image_dict (image_seq=>block_id_list): {}'.format(image_dict))
     log(group_pairs, 'Layout blocks found at PEBs: %s' % list(image_dict.values()))
 
+    # TODO: Have this return the dict, so associate_blocks just can use the pairing of image_seq to layout_pair easier.
     return list(image_dict.values())
 
 
@@ -57,8 +59,13 @@ def associate_blocks(blocks, layout_pairs, start_peb_num):
     """
     seq_blocks = []
     for layout_pair in layout_pairs:
-        seq_blocks = sort.by_image_seq(blocks, blocks[layout_pair[0]].ec_hdr.image_seq)
-
+        log(associate_blocks, 'layout_pair={}\timage_seq={}\tblock for that seq: {}'.format(layout_pair, blocks[layout_pair[0]].ec_hdr.image_seq, blocks[layout_pair[0]]))
+        # Get only those blocks corresponding to the given image_seq value:
+        seq_blocks_1 = sort.by_image_seq(blocks, blocks[layout_pair[0]].ec_hdr.image_seq, new_method=False)
+        seq_blocks = sort.by_image_seq(blocks, blocks[layout_pair[0]].ec_hdr.image_seq, new_method=True)
+        assert seq_blocks == seq_blocks_1
+        log(associate_blocks, 'seq_blocks={}'.format(seq_blocks))
         layout_pair.append(seq_blocks)
+        log(associate_blocks, 'current status of layout_pairs=\t{}'.format(layout_pairs))
 
     return layout_pairs
